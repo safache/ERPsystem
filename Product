@@ -1,0 +1,43 @@
+
+const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  },
+  supplier: {
+    type: String,
+    required: true
+  },
+  status: {
+    type: String,
+    enum: ['in-stock', 'out-of-stock', 'discontinued'],
+    default: 'in-stock'
+  },
+  image: {
+    type: String, // Store image as base64 string
+    required: false
+  }
+  
+}, {
+  timestamps: true
+});
+
+module.exports = mongoose.model('Product', productSchema);

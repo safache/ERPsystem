@@ -1,0 +1,44 @@
+
+const mongoose = require('mongoose');
+
+const employeeSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    position: {
+        type: String,
+        required: true
+    },
+    department: {
+        type: String,
+        required: true,
+        enum: ['Sales', 'Human Resource', 'Stock', 'Finance', 'Operations']
+    },
+    hireDate: {
+        type: Date,
+        required: true,
+        default: Date.now
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
+    address: {
+        type: String,
+        required: true
+    }
+}, {
+    timestamps: true
+});
+
+module.exports = mongoose.model('Employee', employeeSchema);
