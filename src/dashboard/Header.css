@@ -1,0 +1,88 @@
+.header {  
+    display: flex;  
+    justify-content: space-between;  
+    align-items: center;  
+    padding: 20px;  
+    background-color: #ffffff;
+    box-shadow: #9a9898 0px 0px 5px 0px;
+    border-bottom: 1px  #9a9898; 
+    height: 100px;
+}  
+
+.logoh {  
+    margin-bottom:0px ;
+    width: 300px;
+    
+}  
+
+.navbar {  
+    display: flex;  
+    justify-content: space-between; /* Espace entre les éléments */  
+    align-items: center; /* Aligner verticalement au centre */  
+   
+    padding: 10px 20px; /* Espacement interne */  
+}  
+
+.nav-links {  
+    list-style: none; /* Enlever les puces de la liste */  
+    display: flex; /* Afficher les éléments de la liste en ligne */  
+    gap: 15px; /* Reduced from whatever it was before */
+    width: 100%; /* Largeur de la liste */
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}  
+
+.nav-links li {  
+    margin: 30px; /* Pas de marge */  
+}  
+
+.nav-links a {  
+    text-decoration: none; /* Pas de soulignement */  
+    color: #333; /* Couleur du texte */  
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+
+}  
+.logout-btn{
+    background-color: rgb(39, 96, 240);
+    color: white; /* Couleur du texte du bouton */  
+    padding: 10px 15px; /* Espacement interne des boutons */  
+    border-radius: 10px; /* Arrondir les bords */  
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+}
+.nav-links li a {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Reduced gap between icon and text */
+  text-decoration: none;
+  color: #333;
+  padding: 8px 12px; /* Slightly reduced padding */
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-icon {
+  font-size: 1.2rem; /* Slightly reduced icon size if needed */
+}
+
+.auth-buttons {  
+    display: flex; /* Afficher les boutons en ligne */  
+    gap: 10px; /* Espacement entre les boutons */  
+   
+}  
+
+.button {  
+    background-color: #ff9800; /* Couleur du bouton */  
+    color: white; /* Couleur du texte du bouton */  
+    padding: 10px 15px; /* Espacement interne des boutons */  
+    border-radius: 5px; /* Arrondir les bords */  
+    text-decoration: none; /* Pas de soulignement */ 
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    
+}  
+.join-community{
+    width: 70px;
+}
