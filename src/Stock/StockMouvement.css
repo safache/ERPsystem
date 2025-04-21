@@ -1,0 +1,125 @@
+.stock-movement {
+  padding: 20px;
+}
+
+.movement-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.movement-table th,
+.movement-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.movement-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.movement-type {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.movement-type.in {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.movement-type.out {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.movement-icon {
+  font-size: 0.9rem;
+}
+
+.quantity {
+  font-weight: 500;
+}
+
+.quantity.in {
+  color: #2e7d32;
+}
+
+.quantity.out {
+  color: #c62828;
+}
+
+.loading,
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.search-input {
+  width: 300px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.filter-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 10px;
+  margin-bottom: 46px;
+
+}
+
+.filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 36px; /* Match search input height */
+  
+}
+
+.filter-btn:hover {
+  background: #f8f9fa;
+}
+
+.filter-btn.active {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+.filter-btn.entry.active {
+  background: #e8f5e9;
+  border-color: #c8e6c9;
+  color: #2e7d32;
+}
+
+.filter-btn.exit.active {
+  background: #ffebee;
+  border-color: #ffcdd2;
+  color: #c62828;
+}

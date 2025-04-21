@@ -1,0 +1,38 @@
+.toast-content {
+  padding: 8px;
+}
+
+.toast-content h4 {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.toast-content p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.response-icon {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 20px;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success {
+  background: #e7f7ef;
+  color: #1f7d5b;
+  border: 1px solid #a3e4c9;
+}
+
+.Toastify__toast--error {
+  background: #fee7e7;
+  color: #d92d20;
+  border: 1px solid #fecdcd;
+}
