@@ -1,7 +1,7 @@
 /* Dashboard.css */
 .dashboard-container {
     padding: 20px;
-    max-width: 1550px;
+    max-width: 1600px ;
     margin: 0 auto;
   }
   
@@ -11,75 +11,110 @@
     color: #09017b;
   }
   
+  /* Common card styles */
+  .overview-card,
+  .performance-card,
+  .stock-card,
+  .stat-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px; /* Set minimum height instead of fixed height */
+    height: auto; /* Allow content to determine height */
+  }
+
   /* Section 1: Aperçu Général */
   .overview-section {
     display: flex;
     justify-content: space-between;
+    gap: 20px;
     margin-bottom: 20px;
-    gap: 15px;
-    height: auto;
-
+    align-items: stretch; /* Make cards stretch to match tallest sibling */
   }
-  /* Add these styles for the new chart section */
-.performance-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-}
 
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.chart-container {
-  height: 300px;
-  margin-bottom: 1rem;
-}
-
-.stats-summary {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.stat-item {
-  text-align: center;
-}
-
-.stat-label {
-  display: block;
-  color: #6b7280;
-  font-size: 0.875rem;
-  margin-bottom: 0.25rem;
-}
-.stat-value {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #1f2937;
-}
   .overview-card {
-    width: 30%;
-    background-color: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
-
+    width: calc(33.33% - 14px);
   }
- .tit {
-  font-size:35px;
-  margin-bottom: 45px;
-  color: #021161;
- }
-  .overview-card h2 {  margin-bottom: 45px;
 
+  .overview-section .overview-card .chart-container {
+    height: 200px;
+    margin-bottom: 10px;
+  }
+
+  .overview-section .overview-card .stats-summary {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-top: auto; /* Push to bottom of card */
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .overview-section .overview-card .stat-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+
+  .overview-section .overview-card .stat-label {
+    color: #666;
+    font-size: 0.9em;
+  }
+
+  .overview-section .overview-card .stat-value {
+    font-weight: bold;
+    color: #333;
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .chart-container {
+    flex: 1;
+    min-height: 250px;
+    position: relative;
+    margin-bottom: 1rem;
+  }
+
+  .stats-summary {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+  }
+
+  .tit {
+    font-size: 35px;
+    margin-bottom: 45px;
+    color: #021161;
+  }
+
+  .overview-card h2 {
+    margin-bottom: 45px;
     font-size: 18px;
     color: #555;
   }
@@ -151,18 +186,15 @@
   .stock-section {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
     gap: 20px;
+    margin-bottom: 20px;
+    align-items: stretch; /* Make cards stretch to match tallest sibling */
   }
-  
+
   .stock-card {
-    width: 48%;
-    background-color: #f9f9f9;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: calc(50% - 10px);
   }
-  
+
   .stock-card h2 {
     font-size: 18px;
     margin-bottom: 10px;
@@ -191,6 +223,10 @@
     border-collapse: collapse;
     background-color: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+    flex: 1;
+    overflow-y: auto; /* Add scroll for overflow */
+    max-height: calc(100% - 60px); /* Account for header */
   }
   
   .stock-table th,
@@ -215,29 +251,22 @@
     display: flex;
     justify-content: space-between;
     gap: 20px;
-  }
-  
-  .performance-card {
-    width: 48%;
-    background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .performance-card h2 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 20px;
+    align-items: stretch; /* Make cards stretch to match tallest sibling */
   }
 
-  .card-header, .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
+  .performance-card {
+    width: calc(33.33% - 14px);
   }
-  
+
+  .performance-stats {
+    width: calc(33.33% - 14px);
+  }
+
+  .stat-card {
+    width: 100%;
+  }
+
   .view-all-link {
     color: #3b82f6;
     text-decoration: none;
@@ -252,4 +281,61 @@
   .view-all-link:hover {
     color: #2563eb;
     text-decoration: underline;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+  }
+
+  .stat-number.red {
+    color: #dc3545;
+  }
+
+  .stat-number.green {
+    color: #28a745;
+  }
+
+  .stat-number.success {
+    color: #17a2b8;
+  }
+
+  .stat-label {
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .card-header {
+    margin-bottom: 1rem;
+  }
+
+  .card-header h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .overview-card,
+    .performance-card,
+    .stock-card,
+    .performance-stats {
+      width: calc(50% - 10px);
+      min-height: 250px; /* Adjust minimum height for smaller screens */
+    }
+  }
+
+  @media (max-width: 768px) {
+    .overview-card,
+    .performance-card,
+    .stock-card,
+    .performance-stats {
+      width: 100%;
+      min-height: 200px; /* Further adjust for mobile */
+    }
   }

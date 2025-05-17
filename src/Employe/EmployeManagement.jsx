@@ -3,8 +3,8 @@ import axios from 'axios';
 import './EmployeManagement.css';
 import { FaUser, FaEnvelope, FaBuilding, FaEye, FaPen, FaTrash } from 'react-icons/fa';
 import { BsGrid, BsListUl } from 'react-icons/bs';
+import { toast } from 'react-toastify';
 
-// Add this validation function at the top of your component, after the initial imports
 const validatePhone = (phone) => {
   const phoneRegex = /^\d{8}$/;
   return phoneRegex.test(phone);
@@ -13,75 +13,100 @@ const validatePhone = (phone) => {
 const EmployeeManagement = () => {
   const [employees, setEmployees] = useState([]);
   const [editingEmployee, setEditingEmployee] = useState(null);
+  const [roles, setRoles] = useState([]);
   const [newEmployee, setNewEmployee] = useState({
     first_name: '', 
     last_name: '', 
     email: '',
-  
     department: '',
-    hire_date: new Date().toISOString().split('T')[0], // Default to current date
+    hire_date: new Date().toISOString().split('T')[0],
     phone_number: '',
     address: '',
     salary: 0.00,
-    mdp: '', // Add password field
-    role: 'Worker' // Default role
+    mdp: '',
+    role_id: ''
   });
+  
   const [showForm, setShowForm] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [viewingEmployee, setViewingEmployee] = useState(null);
-  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-
-  const departments = ['Sales', 'Human Resource', 'Stock', 'Finance', 'Operations','Purchasing'];
-  const roles = ['Worker', 'Manager', 'Admin']; // Add this line
+  const [viewMode, setViewMode] = useState('list');
+ 
+  const departments = ['Sales', 'Human Resource', 'Stock', 'Finance', 'Operations', 'Purchasing'];
 
   useEffect(() => {
     fetchEmployees();
+    fetchRoles();
   }, []);
 
-  const fetchEmployees = () => {
-    axios
-      .get("http://localhost:5000/getEmployes")
+  useEffect(() => {
+    if (roles.length > 0) {
+      fetchEmployees();
+    }
+  }, [roles]);
+
+  const fetchRoles = () => {
+    axios.get("http://localhost:5000/api/roles")
       .then((res) => {
-        console.log("Employees data:", res.data);
-        setEmployees(Array.isArray(res.data) ? res.data : []);
+        const rolesData = Array.isArray(res.data) ? res.data : [];
+        console.log('Fetched roles:', rolesData);
+        setRoles(rolesData);
       })
       .catch((error) => {
-        console.error("Error fetching employees:", error.response?.data || error.message);
-        setEmployees([]); // Définir un tableau vide en cas d’erreur
-        alert(error.response?.data?.message || "Error fetching employees. Please try again.");
+        console.error("Error fetching roles:", error);
+        setRoles([]);
+        toast.error("Error fetching roles");
       });
   };
 
-  // Modify the handleSubmit function to include validation
+  const fetchEmployees = () => {
+    axios.get("http://localhost:5000/getEmployes")
+      .then((res) => {
+        setEmployees(Array.isArray(res.data) ? res.data : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching employees:", error);
+        setEmployees([]);
+        toast.error("Error fetching employees. Please try again.");
+      });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    
     const phoneToValidate = editingEmployee ? editingEmployee.phone_number : newEmployee.phone_number;
     
     if (!validatePhone(phoneToValidate)) {
-      alert("Phone number must be exactly 8 digits");
+      toast.error("Phone number must be exactly 8 digits");
       return;
     }
 
-    if (editingEmployee) {
-      updateEmployee();
-    } else {
-      addEmployee();
-    }
+    editingEmployee ? updateEmployee() : addEmployee();
   };
 
-  const deleteEmployee = (id) => {
-    if (window.confirm("Are you sure you want to delete this employee?")) {
-      axios
-        .delete(`http://localhost:5000/deleteEmployes/${id}`)
-        .then(() => {
-          setEmployees(employees.filter((emp) => emp.id !== id));
-        })
-        .catch((error) => {
-          console.error("Error deleting employee:", error);
-          alert(error.response?.data?.message || "Error deleting employee. Please try again.");
-        });
-    }
+  const addEmployee = () => {
+    const employeeData = {
+      first_name: newEmployee.first_name.trim(),
+      last_name: newEmployee.last_name.trim(),
+      email: newEmployee.email.trim().toLowerCase(),
+      department: newEmployee.department,
+      hire_date: newEmployee.hire_date,
+      phone_number: newEmployee.phone_number,
+      address: newEmployee.address,
+      salary: parseFloat(newEmployee.salary) || 0.00,
+      mdp: newEmployee.mdp,
+      role_id: newEmployee.role_id
+    };
+
+    axios.post("http://localhost:5000/saveEmployes", employeeData)
+      .then((res) => {
+        setEmployees([res.data, ...employees]);
+        setShowForm(false);
+        toast.success('Employee added successfully!');
+      })
+      .catch((error) => {
+        console.error('Error adding employee:', error);
+        toast.error(error.response?.data?.message || "Error adding employee");
+      });
   };
 
   const updateEmployee = () => {
@@ -89,69 +114,49 @@ const EmployeeManagement = () => {
       first_name: editingEmployee.first_name,
       last_name: editingEmployee.last_name,
       email: editingEmployee.email,
-   
       department: editingEmployee.department,
       hire_date: editingEmployee.hire_date,
       phone_number: editingEmployee.phone_number,
       address: editingEmployee.address,
       salary: editingEmployee.salary ? parseFloat(editingEmployee.salary) : 0.00,
-      role: editingEmployee.role,
-      mdp: editingEmployee.mdp // Only include if password is being updated
+      mdp: editingEmployee.mdp,
+      role_id: editingEmployee.role_id
     };
 
-    axios
-      .put(`http://localhost:5000/updateEmployes/${editingEmployee.id}`, updatedEmployee)
+    axios.put(`http://localhost:5000/updateEmployes/${editingEmployee.id}`, updatedEmployee)
       .then((res) => {
-        setEmployees(employees.map((emp) => 
-          emp.id === editingEmployee.id ? res.data : emp
-        ));
+        setEmployees(employees.map((emp) => emp.id === editingEmployee.id ? res.data : emp));
         setEditingEmployee(null);
         setShowForm(false);
+        toast.success('Employee updated successfully!');
       })
       .catch((error) => {
         console.error("Error updating employee:", error);
-        const errorMessage = error.response?.data?.message || 
-                           "Error updating employee. Please try again.";
-        alert(errorMessage);
+        toast.error(error.response?.data?.message || "Error updating employee");
       });
   };
- 
-  const addEmployee = () => {
-    const employeeData = {
-      first_name: newEmployee.first_name.trim(),
-      last_name: newEmployee.last_name.trim(),
-      email: newEmployee.email.trim().toLowerCase(),
-     
-      department: newEmployee.department,
-      hire_date: newEmployee.hire_date,
-      phone_number: newEmployee.phone_number,
-      address: newEmployee.address,
-      salary: parseFloat(newEmployee.salary) || 0.00,
-      mdp: newEmployee.mdp, // Include password
-      role: newEmployee.role || 'Worker' // Include role with default
-    };
 
-    axios.post("http://localhost:5000/saveEmployes", employeeData)
-      .then((res) => {
-        console.log('Employee created:', res.data);
-        setEmployees([res.data, ...employees]);
-        setShowForm(false);
-      })
-      .catch((error) => {
-        console.error('Error adding employee:', error);
-        const errorMessage = error.response?.data?.message || 
-                           "Error adding employee. Please try again.";
-        alert(errorMessage);
-      });
+  const deleteEmployee = (id) => {
+    if (window.confirm("Are you sure you want to delete this employee?")) {
+      axios.delete(`http://localhost:5000/deleteEmployes/${id}`)
+        .then(() => {
+          setEmployees(employees.filter((emp) => emp.id !== id));
+          toast.success('Employee deleted successfully!');
+        })
+        .catch((error) => {
+          console.error("Error deleting employee:", error);
+          toast.error(error.response?.data?.message || "Error deleting employee");
+        });
+    }
+  };
+
+  const handleViewDetails = (employee) => {
+    setViewingEmployee(employee);
   };
 
   const handleEdit = (employee) => {
     setEditingEmployee(employee);
     setShowForm(true);
-  };
-
-  const handleViewDetails = (employee) => {
-    setViewingEmployee(employee);
   };
 
   const filteredEmployees = employees.filter(emp => {
@@ -175,8 +180,8 @@ const EmployeeManagement = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="view-toggle-btn" onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-            {viewMode === 'grid' ? <BsListUl /> : <BsGrid />}
+          <button className="view-toggle-btn" onClick={() => setViewMode(viewMode === 'list' ? 'grid' : 'list')}>
+            {viewMode === 'list' ? <BsGrid /> : <BsListUl />}
           </button>
         </div>
         <button className="add-employee-btn" onClick={() => setShowForm(true)}>
@@ -333,20 +338,27 @@ const EmployeeManagement = () => {
               <div className="form-group">
                 <label>Role</label>
                 <select
-                  value={editingEmployee ? editingEmployee.role : newEmployee.role}
-                  onChange={(e) =>
-                    editingEmployee
-                      ? setEditingEmployee({ ...editingEmployee, role: e.target.value })
-                      : setNewEmployee({ ...newEmployee, role: e.target.value })
-                  }
-                  required
+                  value={editingEmployee ? editingEmployee.role_id : newEmployee.role_id}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (editingEmployee) {
+                      setEditingEmployee({ ...editingEmployee, role_id: value });
+                    } else {
+                      setNewEmployee({ ...newEmployee, role_id: value });
+                    }
+                  }}
+                 
                 >
                   <option value="">Select Role</option>
-                  {roles.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
+                  {Array.isArray(roles) && roles.length > 0 ? (
+                    roles.map((role) => (
+                      <option key={role.id} value={role.id}>
+                        {role.name}
+                      </option>
+                    ))
+                  ) : (
+                    <option disabled>No roles available</option>
+                  )}
                 </select>
               </div>
               <div className="modal-footer">
@@ -413,18 +425,14 @@ const EmployeeManagement = () => {
               </div>
               <div className="detail-row">
                 <strong>Role:</strong>
-                <span>{viewingEmployee.role}</span>
+                <span>
+                  {Array.isArray(roles) && viewingEmployee.role_id
+                    ? (roles.find(role => role.id === parseInt(viewingEmployee.role_id))?.name || 'No Role Assigned')
+                    : 'No Role Assigned'
+                  }
+                </span>
               </div>
             </div>
-          {/*  <div className="modal-footer">
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={() => setViewingEmployee(null)}
-              >
-                Close
-              </button>
-            </div>*/}
           </div>
         </div>
       )}

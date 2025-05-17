@@ -98,10 +98,10 @@ const SalesInvoices = () => {
                   <tr>
                     <td style="border: 1px solid #ddd; padding: 8px;">${detail.product_name}</td>
                     <td style="border: 1px solid #ddd; padding: 8px;">${detail.quantity}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">DT${Number(detail.unitprice).toFixed(2)}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">DT${totalPrice.toFixed(2)}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">DT${tva.toFixed(2)}</td>
-                    <td style="border: 1px solid #ddd; padding: 8px;">DT${totalWithTVA.toFixed(2)}</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${Number(detail.unitprice).toFixed(2)}DT</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${totalPrice.toFixed(2)}DT</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${tva.toFixed(2)}DT</td>
+                    <td style="border: 1px solid #ddd; padding: 8px;">${totalWithTVA.toFixed(2)}DT</td>
                   </tr>
                 `;
               }).join('')}
@@ -109,10 +109,10 @@ const SalesInvoices = () => {
           </table>
   
           <div style="text-align: right; margin-top: 20px; border-top: 2px solid #ddd; padding-top: 20px;">
-            <h3>Subtotal: DT${Number(invoiceWithDetails.invoice.totalamount).toFixed(2)}</h3>
-            <h3>TVA (19%): DT${(Number(invoiceWithDetails.invoice.totalamount) * 0.19).toFixed(2)}</h3>
-            <h3>Timbre fiscal: DT 1.00</h3>
-            <h3>Total: DT ${(Number(invoiceWithDetails.invoice.totalamount) * 1.19 + 1).toFixed(2)}</h3>
+            <h3>Subtotal: ${Number(invoiceWithDetails.invoice.totalamount).toFixed(2)} DT</h3>
+            <h3>TVA (19%): ${(Number(invoiceWithDetails.invoice.totalamount) * 0.19).toFixed(2)} DT</h3>
+            <h3>Timbre fiscal:  1.00 DT</h3>
+            <h3>Total:  ${(Number(invoiceWithDetails.invoice.totalamount) * 1.19 + 1).toFixed(2)} DT</h3>
           </div>
         </div>
       `;

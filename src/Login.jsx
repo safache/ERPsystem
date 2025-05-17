@@ -10,7 +10,6 @@ const Login = ({ onLogin }) => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Check if employee is already authenticated
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -38,14 +37,14 @@ const Login = ({ onLogin }) => {
       
       if (employeeData) {
         console.log('Login successful:', employeeData);
-        // Store employee data in localStorage
         localStorage.setItem("token", employeeData.token);
         localStorage.setItem("id", employeeData.id.toString());
         localStorage.setItem("userEmail", employeeData.email);
-        localStorage.setItem("userRole", employeeData.role);
+        localStorage.setItem("Role", employeeData.role?.name || 'No Role Assigned');
+        console.log('Role received:', employeeData.role); // Debug log
         localStorage.setItem("userName", `${employeeData.first_name} ${employeeData.last_name}`);
-        localStorage.setItem("department", employeeData.department);
-        localStorage.setItem("position", employeeData.position);
+        localStorage.setItem("department", employeeData.department || '');
+        localStorage.setItem("position", employeeData.position || '');
 
         if (onLogin) {
           onLogin();

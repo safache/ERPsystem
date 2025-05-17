@@ -51,7 +51,6 @@ const Dashboard = () => {
         const response = await axios.get("http://localhost:5000/dashboard", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-        console.log("Dashboard data:", response.data); // Debug log
         setData(response.data);
 
         // Update purchase orders chart
@@ -61,7 +60,8 @@ const Dashboard = () => {
             ...prev.datasets[0],
             data: [
               Number(response.data.purchaseOrdersStats?.totalAmount || 0),
-              Number(response.data.purchaseOrdersStats?.approvedAmount || 0)
+              Number(response.data.purchaseOrdersStats?.approvedAmount || 0),
+              
             ]
           }]
         }));
@@ -110,21 +110,23 @@ const Dashboard = () => {
       ? data.recentOrders
       : data.recentOrders?.filter((order) => order.status === statusFilter);
 
-  // Employee Stats Chart
+  // Employee Stats Chart (Updated to use role_name)
   const employeeRolesChart = {
-    labels: data.employeeStats?.map((role) => role.role),
+    labels: data.employeeStats?.map((role) => role.role_name),
     datasets: [
       {
         label: "Number of Employees",
         data: data.employeeStats?.map((role) => role.count),
         backgroundColor: data.employeeStats?.map((role) => {
-          switch (role.role.toLowerCase()) {
-            case 'admin':
-              return '#FF6384'; // Red for Admin
-            case 'manager':
-              return '#36A2EB'; // Blue for Manager
+          switch (role.role_name.toLowerCase()) {
+            case 'hr manager':
+              return '#FF6384'; // Red for HR Manager
+            case 'financial manager':
+              return '#36A2EB'; // Blue for Financial Manager
             case 'worker':
               return '#4BC0C0'; // Teal for Worker
+            case 'no role':
+              return '#CCCCCC'; // Gray for No Role
             default:
               return '#FFCE56'; // Yellow for any other role
           }
@@ -166,32 +168,8 @@ const Dashboard = () => {
         </div>
         <div className="overview-card">
           <div className="card-header">
-            <h2>Out of Stock Products</h2>
-            <a href="./StockManagement" className="view-all-link">View All</a>
-          </div>
-          <p className={`out-of-stock ${data.outOfStockCount > 0 ? "red" : "green"}`}>
-            {data.outOfStockCount || 0}
-          </p>
-        </div>
-      </div>
-
-      {/* Section 2: Performance */}
-      <div className="performance-section">
-        <div className="performance-card">
-          <div className="card-header">
-            <h2 className="tit">Employee Roles</h2>
-            <a href="./EmployeManagement" className="view-all-link">View All</a>
-          </div>
-          {data.employeeStats && <Bar data={employeeRolesChart} />}
-        </div>
-        <div className="performance-card">
-          <h2 className="tit">Monthly Revenue (Last 6 Months)</h2>
-          {data.monthlyRevenue && <Line data={monthlyRevenueChart} />}
-        </div>
-        <div className="performance-card">
-          <div className="card-header">
-            <h2>Purchase Orders Summary</h2>
-            <a href="./PurchaseOrderManagement" className="view-all-link">View All</a>
+            <h2 className="Purchase">Purchase Orders Summary</h2>
+       
           </div>
           <div className="chart-container">
             <Bar 
@@ -214,7 +192,7 @@ const Dashboard = () => {
                   y: {
                     beginAtZero: true,
                     ticks: {
-                      callback: (value) => `dt${value}`
+                      callback: (value) => `${value} dt`
                     }
                   }
                 }
@@ -242,11 +220,38 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Section 2: Performance */}
+      <div className="performance-section">
+        <div className="performance-card">
+          <div className="card-header">
+            <h2 className="tit">Employee Roles</h2>
+
+          </div>
+          {data.employeeStats && <Bar data={employeeRolesChart} />}
+        </div>
+        <div className="performance-card">
+          <h2 >Monthly Revenue (Last 6 Months)</h2>
+          {data.monthlyRevenue && <Line data={monthlyRevenueChart} />}
+        </div>
+        <div className="performance-stats">
+          <div className="stat-card">
+            <div className="card-header">
+              <h2>Out of Stock Products</h2>
+      
+            </div>
+            <p className={`stat-number ${data.outOfStockCount > 0 ? "red" : "green"}`}>
+              {data.outOfStockCount || 0}
+            </p>
+            <p className="stat-label">Products Out of Stock</p>
+          </div>
+        </div>
+      </div>
+
       {/* Section 3: Orders */}
       <div className="orders-section">
         <div className="section-header">
           <h2>Recent Orders</h2>
-          <a href="./ClientOrderManagement" className="view-all-link">View All</a>
+
         </div>
         <div className="filter-container">
           <label>Filter by Status: </label>
@@ -258,7 +263,6 @@ const Dashboard = () => {
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>
             <option value="rejected">Rejected</option>
-           
           </select>
         </div>
         <table className="orders-table">
@@ -279,8 +283,8 @@ const Dashboard = () => {
                 <td>{order.status}</td>
                 <td>
                   {typeof order.total_amount === "number"
-                    ? `dt${order.total_amount.toFixed(2)}`
-                    : `dt${parseFloat(order.total_amount).toFixed(2)}`}
+                    ? `${order.total_amount.toFixed(2)}dt`
+                    : `${parseFloat(order.total_amount).toFixed(2)}dt`}
                 </td>
                 <td>{new Date(order.created_at).toLocaleDateString()}</td>
               </tr>
@@ -294,7 +298,7 @@ const Dashboard = () => {
         <div className="stock-card">
           <div className="card-header">
             <h2>Low Stock Products</h2>
-            <a href="./StockManagement" className="view-all-link">View All</a>
+         
           </div>
           <table className="stock-table">
             <thead>
@@ -319,8 +323,8 @@ const Dashboard = () => {
         </div>
         <div className="stock-card">
           <div className="card-header">
-            <h2 >Recent Stock Movements</h2>
-            <a href="./StockMouvement" className="view-all-link">View All</a>
+            <h2>Recent Stock Movements</h2>
+
           </div>
           <table className="stock-table">
             <thead>

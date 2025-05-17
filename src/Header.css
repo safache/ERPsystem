@@ -13,7 +13,7 @@
     /* Sidebar Styling */
     .sidebar {
       width: 250px;
-      background-color: #ffffff; /* Dark background */
+      background-color: #1572dd; /* Dark background */
       color: #fff;
       display: flex;
       flex-direction: column;
@@ -44,7 +44,7 @@
     position: fixed; /* Change to fixed */
     left: 60px; /* Align with collapsed sidebar */
     min-width: 200px;
-    background: white;
+    background: rgb(255, 255, 255);
     border: 1px solid #e5e7eb;
     border-radius: 0 8px 8px 0;
     box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
@@ -74,7 +74,7 @@
   }
   
   .sidebar.collapsed .submenu li a {
-    color: #0b0727; /* Light gray color for text */
+    color: #ffffff; /* Light gray color for text */
     display: flex;
     align-items: center;
     gap: 8px;
@@ -101,8 +101,8 @@
     left: 100%;
     top: 50%;
     transform: translateY(-50%);
-    background: #ffffff;
-    color: #0b0727; /* Light gray color for text */
+    background: #1572dd;
+    color: #ffffff; /* Light gray color for text */
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -490,7 +490,6 @@
     margin-bottom: 20px;
     position: relative;
     transition: all 0.3s ease;
-    border-bottom: 2px solid #e5e7eb; /* Add separator line */
   }
   
   .sidebar-logo img {
@@ -498,7 +497,6 @@
   }
   
   .sidebar.collapsed .sidebar-logo {
-    padding: 1rem 0;
     margin-bottom: 15px;
   }
   
@@ -509,7 +507,7 @@
   .logoh {  
     padding-right: 140px;
     width: 350px;
-   padding-left: 50px;
+   padding-left: 30px;
     
   
   }
@@ -539,7 +537,7 @@
     display: flex;
     align-items: center;
     padding: 12px 12px;
-    color: #120469; /* Light gray color for text */
+    color: #ffffff; /* Light gray color for text */
     text-decoration: none;
     font-size: 16px;
     transition: background-color 0.3s, color 0.3s;
@@ -715,17 +713,22 @@
   }
   
   .menu-header {
+    cursor: pointer;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 15px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    color: #0b0727;
+    color: #ffffff;
+    transition: all 0.3s ease;
   }
   
   .menu-header:hover {
     background-color: #f3f4f6;
+  }
+  
+  .menu-header:hover,
+  .menu-header:hover .menu-title,
+  .menu-header:hover .arrow-icon {
     color: #0b0727;
   }
   
@@ -733,7 +736,13 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #030b5e;
+    color: #ffffff;
+    transition: color 0.3s ease;
+  }
+  
+  .arrow-icon {
+    color: #ffffff;
+    transition: color 0.3s ease;
   }
   
   .submenu {
@@ -750,14 +759,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #120469; /* Light gray color for text */
+    color: #0b0727;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
   }
   
   .submenu li a:hover {
     background-color: #f3f4f6;
-    color: #0b0727;
+    color: #133a8e;
   }
   
   .arrow-icon {
@@ -1058,11 +1067,12 @@
 
 /* Improve hover interaction */
 .sidebar.collapsed .menu-item:hover {
-  background: #f3f4f6;
+  background: #8aacf0;
 }
 
 .sidebar.collapsed .menu-item:hover .menu-header {
   background: #f3f4f6;
+  color: #230dce;
 }
 
 /* Style submenu items */
@@ -1126,11 +1136,9 @@
   align-items: center;
   justify-content: space-between;
   transition: background-color 0.3s;
+  
 }
 
-.menu-header:hover {
-  background-color: rgba(0, 0, 0, 0.04);
-}
 
 .menu-item {
   position: relative;
@@ -1171,15 +1179,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+.menu-header:hover{
+  background-color: #f3f4f6;
+}
+.menu-header:hover,
+.menu-header:hover .menu-title,
+.menu-header:hover .arrow-icon {
   color: #0b0727;
 }
-
 .menu-title {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: #ffffff;
+  transition: color 0.3s ease;
 }
-
+.menu-title:hover{
+  background-color: #f3f4f6;
+  color: #0b0727;
+}
 .nav-icon {
   margin-right: 10px;
   font-size: 20px;
@@ -1207,16 +1228,19 @@
   gap: 10px;
   color: #0b0727;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 /* Hover effects */
 .menu-header:hover,
 .submenu li a:hover {
   background-color: #f3f4f6;
+  color: #133a8e;
 }
 
 /* Arrow icon */
 .arrow-icon {
   font-size: 20px;
-  transition: transform 0.3s;
+  color: #ffffff;
+  transition: color 0.3s ease;
 }

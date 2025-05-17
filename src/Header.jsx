@@ -12,9 +12,13 @@ import VacationRequest from './Vacation/VacationRequest';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaBell } from 'react-icons/fa';
+import { AuthContext } from './AuthContext';
+import { useContext } from 'react';
 
 function Header({ onLogout }) {
+  const { user, loading } = useContext(AuthContext);
   const navigate = useNavigate();
+  
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showVacationModal, setShowVacationModal] = useState(false);
@@ -43,8 +47,8 @@ function Header({ onLogout }) {
   const userInfo = {
     name: localStorage.getItem('userName'),
     email: localStorage.getItem('userEmail'),
-    role: localStorage.getItem('userRole'),
-    department: localStorage.getItem('department') // Add this line
+    role: localStorage.getItem('Role'),
+    department: localStorage.getItem('department')
   };
 
   const fetchMyRequests = async () => {
@@ -131,7 +135,7 @@ function Header({ onLogout }) {
   const showAllNotifications = () => {
     setAreNotificationsDeleted(false);
     localStorage.setItem('notificationsDeleted', 'false');
-    fetchNotifications(); // Refresh notifications when showing them again
+    fetchNotifications();
   };
 
   useEffect(() => {
@@ -186,18 +190,24 @@ function Header({ onLogout }) {
       [menuName]: !prevStates[menuName]
     }));
   };
+  const hasPermission = (permissionKey) => {
+    if (!user || !user.permissions) return false;
+    return user.permissions[permissionKey]?.can_see === true;
+  };
 
   useEffect(() => {
     if (showProfileModal) {
       fetchMyRequests();
     }
   }, [showProfileModal]);
-
+  
   useEffect(() => {
     if (showRequestsModal) {
       fetchMyRequests();
     }
   }, [showRequestsModal]);
+  
+
 
   return (
     <div className="sidebar-container">
@@ -298,7 +308,7 @@ function Header({ onLogout }) {
         {/* Logo at the top of the sidebar */}
         <div className="sidebar-logo">
           <a href="./Dashboard">
-            <img src="erp.png" alt="Logo" className="logoh" />
+            <img src="FlexERP.png" alt="Logo" className="logoh" />
           </a>
           <button 
             className="collapse-btn"
@@ -317,6 +327,7 @@ function Header({ onLogout }) {
                 <span>Dashboard</span>
               </a>
             </li>
+            {hasPermission('employees') && (
             <li className="menu-item">
               <div 
                 className="menu-header" 
@@ -334,20 +345,35 @@ function Header({ onLogout }) {
                 )}
               </div>
               <ul className={`submenu ${menuStates.employee ? 'open' : ''}`}>
+              {hasPermission('employees') && (
                 <li>
                   <a href="./EmployeManagement">
                     <FaUser className="nav-icon" />
                     <span>Manage Employees</span>
                   </a>
                 </li>
+                )}
+                 {hasPermission('roles') && (
+                <li>
+                  <a href="./RoleManagement">
+                    <FaUserCircle className="nav-icon" />
+                    <span>Role Management</span>
+                  </a>
+                </li>
+                )}
+                {hasPermission('vacations') && (
                 <li>
                   <a href="./VacationRequests">
                     <FaCalendarPlus className="nav-icon" />
                     <span>Vacation Requests</span>
                   </a>
                 </li>
+                )}
               </ul>
             </li>
+             )}
+
+{hasPermission('products') && (
             <li className="menu-item">
               <div 
                 className="menu-header" 
@@ -365,38 +391,51 @@ function Header({ onLogout }) {
                 )}
               </div>
               <ul className={`submenu ${menuStates.product ? 'open' : ''}`}>
+              {hasPermission('products') && (
                 <li>
                   <a href="./ProductManagement">
                     <LiaProductHunt className="nav-icon" />
                     <span>Manage Products</span>
                   </a>
-                </li>
+                </li>)}
+              
+                {hasPermission('stock') && (
+                  <>
                 <li>
                   <a href="./StockManagement">
                     <FaBoxes className="nav-icon" />
                     <span>Stock Management</span>
                   </a>
-                </li>
+                </li> 
+             
                 <li>
                   <a href="./StockMouvement">
                     <FaExchangeAlt className="nav-icon" />
                     <span>Stock Movements</span>
                   </a>
                 </li>
+                 </>
+                   )}
               </ul>
             </li>
+             )}
+
+           {hasPermission('clients') && ( 
             <li>
               <a href="./ClientManagement" data-tooltip="Clients">
                 <CiFaceSmile className="nav-icon" />
                 <span>Clients</span>
               </a>
-            </li>
+            </li>   )}
+            {hasPermission('suppliers') && (
             <li>
               <a href="./SupplierManagement" data-tooltip="Suppliers">
                 <TbTruckDelivery className="nav-icon" />
                 <span>Suppliers</span>
               </a>
-            </li>
+            </li> 
+           )}
+            {(hasPermission('clientOrders') || hasPermission('purchaseOrders')) && (
             <li className="menu-item">
               <div 
                 className="menu-header" 
@@ -414,63 +453,78 @@ function Header({ onLogout }) {
                 )}
               </div>
               <ul className={`submenu ${menuStates.orders ? 'open' : ''}`}>
-                <li>
-                  <a href="./ClientOrderManagement">
-                    <CiFaceSmile className="nav-icon" />
-                    <span>Client Orders</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="./PurchaseOrderManagement">
-                    <TbTruckDelivery className="nav-icon" />
-                    <span>Purchase Orders</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            <li className="menu-item">
-              <div 
-                className="menu-header" 
-                onClick={() => handleMenuClick('invoices')}
-                data-tooltip="Invoices"
-              >
-                <div className="menu-title">
-                  <FaFileInvoiceDollar className="nav-icon" />
-                  <span>Fianance</span>
-                </div>
-                {menuStates.invoices ? (
-                  <MdKeyboardArrowUp className="arrow-icon" />
-                ) : (
-                  <MdKeyboardArrowDown className="arrow-icon" />
+                {hasPermission('clientOrders') && (
+                  <li>
+                    <a href="./ClientOrderManagement">
+                      <CiFaceSmile className="nav-icon" />
+                      <span>Client Orders</span>
+                    </a>
+                  </li>
                 )}
-              </div>
-              <ul className={`submenu ${menuStates.invoices ? 'open' : ''}`}>
-                <li>
-                  <a href="./PurchaseInvoices">
-                    <FaFileInvoiceDollar className="nav-icon" />
-                    <span>Purchase Invoices</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="./SalesInvoices">
-                    <FaFileInvoiceDollar className="nav-icon" />
-                    <span>Sales Invoices</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="./QuoteManagement">
-                    <FaFileInvoiceDollar className="nav-icon" />
-                    <span>Quotes</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="./WithholdingTax">
-                    <FaPercentage className="nav-icon" />
-                    <span>Withholding Tax</span>
-                  </a>
-                </li>
+                {hasPermission('purchaseOrders') && (
+                  <li>
+                    <a href="./PurchaseOrderManagement">
+                      <TbTruckDelivery className="nav-icon" />
+                      <span>Purchase Orders</span>
+                    </a>
+                  </li>
+                )}
               </ul>
             </li>
+             )}
+            {hasPermission('purchaseInvoices') && (
+              <li className="menu-item">
+                <div 
+                  className="menu-header" 
+                  onClick={() => handleMenuClick('invoices')}
+                  data-tooltip="Invoices"
+                >
+                  <div className="menu-title">
+                    <FaFileInvoiceDollar className="nav-icon" />
+                    <span>Finance</span>
+                  </div>
+                  {menuStates.invoices ? (
+                    <MdKeyboardArrowUp className="arrow-icon" />
+                  ) : (
+                    <MdKeyboardArrowDown className="arrow-icon" />
+                  )}
+                </div>
+                <ul className={`submenu ${menuStates.invoices ? 'open' : ''}`}>
+                  {hasPermission('purchaseInvoices') && (
+                    <li>
+                      <a href="./PurchaseInvoices">
+                        <FaFileInvoiceDollar className="nav-icon" />
+                        <span>Purchase Invoices</span>
+                      </a>
+                    </li>
+                  )}
+                  {hasPermission('salesInvoices') && (
+                    <li>
+                      <a href="./SalesInvoices">
+                        <FaFileInvoiceDollar className="nav-icon" />
+                        <span>Sales Invoices</span>
+                      </a>
+                    </li>
+                  )}
+                  {hasPermission('quotes') && (
+                    <li>
+                      <a href="./QuoteManagement">
+                        <FaFileInvoiceDollar className="nav-icon" />
+                        <span>Quotes</span>
+                      </a>
+                    </li>
+                  )}
+                  {hasPermission('taxes') && (
+                    <li>
+                      <a href="./WithholdingTax">
+                        <FaPercentage className="nav-icon" />
+                        <span>Withholding Tax</span>
+                      </a>
+                    </li>
+                  )}
+                </ul>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -543,7 +597,7 @@ function Header({ onLogout }) {
                     <label>Department:</label>
                     <span className="user-department">{userInfo.department || 'Not assigned'}</span>
                   </div>
-                  <div className="info-row">
+                <div className="info-row">
                     <label>Role:</label>
                     <span className="user-role">{userInfo.role}</span>
                   </div>
@@ -636,4 +690,7 @@ function Header({ onLogout }) {
   );
 }
 
-export default Header;
+
+
+
+export default Header ;

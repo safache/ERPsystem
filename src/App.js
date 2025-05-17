@@ -18,6 +18,9 @@ import PurchaseInvoices from "./PurchaseInvoices/PurchaseInvoices";
 import SalesInvoices from "./SalesInvoices/SalesInvoices";
 import WithholdingTax from './WithholdingTax/WithholdingTax';
 import QuoteManagement from "./QuoteManagement/QuoteManagement";
+import RoleManagement from "./Role/RoleManagement";
+import { AuthProvider } from './AuthContext';
+
 const isAuthenticated = () => {
   return !!localStorage.getItem("token");
 };
@@ -40,6 +43,7 @@ function App() {
   };
 
   return (
+    <AuthProvider>
     <Router>
       <div className="app-wrapper">
         {isAuthenticatedState && (
@@ -85,17 +89,19 @@ function App() {
               <Route path="/SalesInvoices" element={<SalesInvoices />} />
               <Route path="/WithholdingTax" element={<WithholdingTax />} />
               <Route path="/QuoteManagement" element={<QuoteManagement />} />
+              <Route path="/RoleManagement" element={<RoleManagement />} />
             </Routes>
             <nav>
-    {['admin', 'manager'].includes(userRole) && (
-      <Link to="/Dashboard">Dashboard</Link>
-    )}
+               {['admin', 'manager'].includes(userRole) && (
+              <Link to="/Dashboard">Dashboard</Link>
+              )}
    
   </nav>
           </div>
         </main>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

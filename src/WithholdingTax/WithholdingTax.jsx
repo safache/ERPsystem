@@ -212,9 +212,9 @@ const WithholdingTax = () => {
             <tr key={tax.id}>
               <td>{tax.invoice_number}</td>
               <td>{tax.client_name}</td>
-              <td>${Number(tax.montant_brut).toFixed(2)}</td>
-              <td>${Number(tax.retenue).toFixed(2)}</td>
-              <td>${Number(tax.montant_net).toFixed(2)}</td>
+              <td>{Number(tax.montant_brut).toFixed(2)}dt</td>
+              <td>{Number(tax.retenue).toFixed(2)}dt</td>
+              <td>{Number(tax.montant_net).toFixed(2)}dt</td>
               <td>{new Date(tax.created_at).toLocaleDateString()}</td>
               <td>
                 <div className="action-buttons">
